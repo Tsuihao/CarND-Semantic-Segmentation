@@ -124,12 +124,13 @@ def test_optimize(optimize):
     If the optimize is not set correctly, training will fail to update weights.
     :param optimize: An implemented `optimize()` function.
     """
+    reg_constant = 0.01
     num_classes = 2
     shape = [2, 3, 4, num_classes]
     layers_output = tf.Variable(tf.zeros(shape))
     correct_label = tf.placeholder(tf.float32, [None, None, None, num_classes])
     learning_rate = tf.placeholder(tf.float32)
-    logits, train_op, cross_entropy_loss = optimize(layers_output, correct_label, learning_rate, num_classes)
+    logits, train_op, cross_entropy_loss = optimize(layers_output, correct_label, learning_rate, num_classes, reg_constant)
 
     _assert_tensor_shape(logits, [2*3*4, num_classes], 'Logits')
 
@@ -171,7 +172,8 @@ def test_train_nn(train_nn):
             'input_image': input_image,
             'correct_label': correct_label,
             'keep_prob': keep_prob,
-            'learning_rate': learning_rate}
+            'learning_rate': learning_rate,
+            'hyperparameter': "testing"}
         _prevent_print(train_nn, parameters)
 
 

@@ -94,7 +94,7 @@ def gen_batch_function(data_folder, image_shape):
 		label_paths = {
 			re.sub(r'_(lane|road)_', '_', os.path.basename(path)): path
 			for path in glob(os.path.join(data_folder, 'gt_image_2', '*_road_*.png'))}
-		background_color = np.array([255, 0, 0])
+		background_color = np.array([255, 0, 0])  # get the red color, represents the non-road(background)
 
 		# Shuffle training data
 		random.shuffle(image_paths)
@@ -109,7 +109,7 @@ def gen_batch_function(data_folder, image_shape):
 				gt_image = scipy.misc.imresize(scipy.misc.imread(gt_image_file), image_shape)
 
 				# Create "one-hot-like" labels by class
-				gt_bg = np.all(gt_image == background_color, axis=2)
+				gt_bg = np.all(gt_image == background_color, axis=2) # compare each element in depth (axis=2) direction
 				gt_bg = gt_bg.reshape(*gt_bg.shape, 1)
 				gt_image = np.concatenate((gt_bg, np.invert(gt_bg)), axis=2)
 
@@ -137,7 +137,7 @@ def gen_test_output(sess, logits, keep_prob, image_pl, data_folder, image_shape)
 		# Run inference
 		im_softmax = sess.run(
 			[tf.nn.softmax(logits)],
-			{keep_prob: 1.0, image_pl: [image]})
+			{keep_prob: 1.0, image_pl: [image]})  # during the inference, we do NOT use dropout.
 		# Splice out second column (road), reshape output back to image_shape
 		im_softmax = im_softmax[0][:, 1].reshape(image_shape[0], image_shape[1])
 		# If road softmax > 0.5, prediction is road
