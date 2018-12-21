@@ -6,7 +6,7 @@ import warnings
 from distutils.version import LooseVersion
 import project_tests as tests
 
-LOGDIR = "/tmp/fcn/"
+LOGDIR = "LOGS"
 
 # Check TensorFlow Version
 assert LooseVersion(tf.__version__) >= LooseVersion('1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
@@ -267,6 +267,7 @@ def run():
                     #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
                     # TODO: Build NN using load_vgg, layers, and optimize function
+                    learning_rate = tf.placeholder(tf.float32)
                     correct_label = tf.placeholder(tf.float32, [None, image_shape[0], image_shape[1], num_classes])
 
                     input_image, keep_prob, vgg_3_tensor, vgg_4_tensor, vgg_7_tensor = load_vgg(sess, vgg_path)
