@@ -178,7 +178,7 @@ tests.test_optimize(optimize)
 
 
 def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
-             correct_label, keep_prob, learning_rate, hyperparameter):
+             correct_label, keep_prob, learning_rate, kp, lr, hyperparameter):
     """
     Train neural network and print out the loss during training.
     :param sess: TF Session
@@ -202,14 +202,22 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     for epoch in range(epochs):
         for image, label in get_batches_fn(batch_size):
 
-            _, loss, summary = sess.run([train_op, cross_entropy_loss, merged_summary],
-                                        feed_dict={input_image: image,
-                                                   correct_label: label,
-                                                   keep_prob: keep_prob})
-
-            if(counter % 10 == 0):
+            if(counter % 10 == 0):  # with summary
+                _, loss, summary = sess.run([train_op, cross_entropy_loss, merged_summary],
+                                            feed_dict={input_image: image,
+                                                       correct_label: label,
+                                                       keep_prob: kp,
+                                                       learning_rate: lr})
+                # summary must be written by writer, otherwise will have fetch 
                 print("Epoch={}/{}, Loss={}".format(epoch+1, epochs, loss))
                 writer.add_summary(summary, counter)
+             
+            else: # without summary
+                _, loss = sess.run([train_op, cross_entropy_loss],
+                                  feed_dict={input_image: image,
+                                             correct_label: label,
+                                             keep_prob: kp,
+                                             learning_rate: lr})
 
             counter += 1
 
@@ -240,11 +248,11 @@ def run():
     #  https://www.cityscapes-dataset.com/
 
     # Grid search for the best combination of learning_rate, keep_prob, l2_reg
-    for learning_rate in [0.001, 0.0001, 0.00001]:
-        for keep_prob in [0.7, 0.8, 0.9]:
+    for lr in [0.001, 0.0001, 0.00001]:
+        for kp in [0.7, 0.8, 0.9]:
             for l2_const in [0.002, 0.005]:
 
-                hparam = make_hparam_string(learning_rate, keep_prob, l2_const)
+                hparam = make_hparam_string(lr, kp, l2_const)
                 print('Configuration {}'.format(hparam))
                 model_path = LOGDIR + hparam + "/model"
 
@@ -259,7 +267,7 @@ def run():
                     #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
                     # TODO: Build NN using load_vgg, layers, and optimize function
-                    correct_label = tf.placeholder(tf.float32, [None, image_shape[0], image_shape[1], num_class])
+                    correct_label = tf.placeholder(tf.float32, [None, image_shape[0], image_shape[1], num_classes])
 
                     input_image, keep_prob, vgg_3_tensor, vgg_4_tensor, vgg_7_tensor = load_vgg(sess, vgg_path)
                     last_layer = layers(vgg_3_tensor, vgg_4_tensor, vgg_7_tensor, num_classes)
@@ -270,15 +278,17 @@ def run():
                     # TODO: Train NN using the train_nn function
                     sess.run(tf.global_variables_initializer())
                     train_nn(sess, 
-                            epoch,
+                            epochs,
                             batch_size,
                             get_batches_fn,
                             train_op,
                             loss,
                             input_image,
                             correct_label,
-                            keep_prob,
-                            learning_rate,
+                            keep_prob,  # Placeholder
+                            learning_rate, #Placeholder
+                            kp, # Scalar
+                            lr, # Scalar
                             hparam)
 
                     save_path = saver.save(sess, model_path)
