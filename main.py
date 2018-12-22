@@ -194,7 +194,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     # TODO: Implement function
     merged_summary = tf.summary.merge_all()
-    writer = tf.summary.FileWriter(LOGDIR + hyperparameter)
+    writer = tf.summary.FileWriter(LOGDIR + "/" + hyperparameter)
     writer.add_graph(sess.graph)
 
     counter = 1
@@ -227,7 +227,7 @@ def make_hparam_string(learning_rate, keep_prob, l2_const):
     return "lr_{},kp_{},l2_{}".format(learning_rate, keep_prob, l2_const)
 
 def run():
-    epochs = 50
+    epochs = 25
     batch_size = 16
     num_classes = 2
     image_shape = (160, 576)  # KITTI dataset uses 160x576 images
@@ -254,7 +254,7 @@ def run():
 
                 hparam = make_hparam_string(lr, kp, l2_const)
                 print('Configuration {}'.format(hparam))
-                model_path = LOGDIR + "/" + hparam + "/model"
+                model_path = "/model/" + hparam
 
                 tf.reset_default_graph()
                 with tf.Session() as sess:
