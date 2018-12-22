@@ -1,6 +1,35 @@
 # Semantic Segmentation
 ### Introduction
-In this project, you'll label the pixels of a road in images using a Fully Convolutional Network (FCN).
+In this project, you'll label the pixels of a road in images using a Fully Convolutional Network (FCN). This project is based on the work of [Fully Convolutional Networks for Semantic Segmentation](https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf). In the reference, there are three main techniques implemented:
+1. [1x1 convolution](https://iamaaditya.github.io/2016/03/one-by-one-convolution/)
+2. [Upsampling with transpose convolution operation](https://towardsdatascience.com/up-sampling-with-transposed-convolution-9ae4f2df52d0)
+3. Skip connection 
+![architecture.png](./images/architectrue.png)
+The visualization of the skip connection in Tensorboard
+![tensorboard.png](./images/tensorboard.png)
+
+
+### Hyperparameter configuration
+
+| Hyperparameter | value  |
+|------|------|
+| learning rate | 0.001   |
+|  keep prob | 0.7|
+| l2 regularization | 0.002|
+
+
+Cross-entropy loss while training
+![loss.png](./images/lr_0.001,kp_0.7,l2_0.002.png)
+
+### Result
+The following image is from the test set
+![image1.png](./images/1.png)
+![image2.png](./images/2.png)
+![image3.png](./images/3.png)
+![image4.png](./images/4.png)
+![image5.png](./images/5.png)
+
+---
 
 ### Setup
 ##### GPU
