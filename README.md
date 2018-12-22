@@ -22,7 +22,8 @@ Cross-entropy loss while training
 ![loss.png](./images/lr_0.001,kp_0.7,l2_0.002.png)
 
 ### Result
-The following image is from the test set
+The following images are from the test set
+
 ![image1.png](./images/1.png)
 ![image2.png](./images/2.png)
 ![image3.png](./images/3.png)
