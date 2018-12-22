@@ -254,7 +254,7 @@ def run():
 
                 hparam = make_hparam_string(lr, kp, l2_const)
                 print('Configuration {}'.format(hparam))
-                model_path = LOGDIR + hparam + "/model"
+                model_path = LOGDIR + "/" + hparam + "/model"
 
                 tf.reset_default_graph()
                 with tf.Session() as sess:
