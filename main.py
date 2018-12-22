@@ -228,7 +228,7 @@ def make_hparam_string(learning_rate, keep_prob, l2_const):
 
 def run():
     epochs = 25
-    batch_size = 16
+    batch_size = 8
     num_classes = 2
     image_shape = (160, 576)  # KITTI dataset uses 160x576 images
     data_dir = './data'
@@ -248,8 +248,8 @@ def run():
     #  https://www.cityscapes-dataset.com/
 
     # Grid search for the best combination of learning_rate, keep_prob, l2_reg
-    for lr in [0.001, 0.0001, 0.00001]:
-        for kp in [0.7, 0.8, 0.9]:
+    for lr in [0.001, 0.0001]:
+        for kp in [0.7, 0.8]:
             for l2_const in [0.002, 0.005]:
 
                 hparam = make_hparam_string(lr, kp, l2_const)
